@@ -1,23 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import pokemon from "./pokemon.json";
 
-function App() {
+function PokemonRow({ pokemon }) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <tr>
+      <td>{pokemon.name.english}</td>
+      <td>{pokemon.type.join(", ")}</td>
+    </tr>
+  );
+}
+function App() {
+  const [filter, setFilter] = useState("");
+  return (
+    <div
+      className="App"
+      style={{
+        margin: "auto",
+        width: 900,
+        paddingTop: "1rem",
+      }}
+    >
+      <h1 className="title">Pokemon search</h1>
+      <input
+        type="text"
+        value={filter}
+        onChange={(e) => {
+          setFilter(e.target.value);
+        }}
+      />
+      <table width="100%">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pokemon
+            .filter((p) => p.name.english.toLocaleLowerCase().includes(filter))
+            .slice(0, 20)
+            .map((p) => (
+              <PokemonRow
+                key={[p.id, p.name.english].join("")}
+                pokemon={p}
+              ></PokemonRow>
+            ))}
+        </tbody>
+      </table>
     </div>
   );
 }
